@@ -774,6 +774,14 @@ namespace PlaywrightSharp.Helpers
         /// <returns>Value as an array of bytes.</returns>
         public static byte[] AsBinary(this string value) => Convert.FromBase64String(value);
 
+        /// <summary>
+        /// Retrieve the Mime type using a file's extension.
+        /// </summary>
+        /// <param name="file">The path to the file.</param>
+        /// <returns>The MIME type for the file or application/octet-stream if unknown.</returns>
+        public static string MimeType(this string file)
+            => _mappings.TryGetValue(new FileInfo(file).Extension, out string mime) ? mime : "application/octet-stream";
+
         internal static string GetContentType(this string path)
         {
             const string defaultContentType = "application/octet-stream";
@@ -787,9 +795,6 @@ namespace PlaywrightSharp.Helpers
         }
 
         internal static bool UrlMatches(this string url, string glob) => GlobToRegex(glob).Match(url).Success;
-
-        internal static string MimeType(this string file)
-            => _mappings.TryGetValue(new FileInfo(file).Extension, out string mime) ? mime : "application/octet-stream";
 
         internal static FilePayload ToFilePayload(this string file)
         {
